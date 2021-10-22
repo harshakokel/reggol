@@ -45,7 +45,7 @@ for i in range(5):
     logger.dump_tabular()
 ```
 
-For additional reference, see [sample usage](./sampe_usage.py). 
+For additional reference, see the [python file `sample_usage.py`](./sample_usage.py) and its output in the [folder `sample_usage_log`](./sample_usage_log). 
 
 ### Integration with third party
 

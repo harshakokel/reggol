@@ -1,0 +1,7 @@
+{
+  "algorithm": "baseline",
+  "batch_size": 5,
+  "domain": "gridworld",
+  "exp_prefix": "custom_experiment",
+  "learning_rate": 0.02
+}
