@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='reggol',
     version='',
-    packages=['src', 'src.logger'],
+    packages=['reggol', 'reggol.logger'],
     url='',
     license='',
     author='Harsha Kokel',

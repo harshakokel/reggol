@@ -6,6 +6,7 @@ import datetime
 import dateutil.tz
 from .logging import Logger
 import errno
+from pathlib import Path
 import git
 
 
@@ -13,7 +14,7 @@ def project_root():
     return os.environ.get("PROJECT_ROOT_DIR", os.getcwd())
 
 
-project_dir = project_root()
+project_dir = Path(project_root())
 
 GitInfo = namedtuple(
     'GitInfo',
@@ -25,6 +26,7 @@ GitInfo = namedtuple(
         'branch_name',
     ],
 )
+
 
 def get_git_infos(dirs):
     git_infos = None
@@ -50,6 +52,7 @@ def get_git_infos(dirs):
     except ImportError:
         git_infos = None
     return git_infos
+
 
 def create_exp_name(exp_prefix, exp_id=0, seed=None):
     """
@@ -97,7 +100,7 @@ def create_log_dir(
         seed=None,
         base_log_dir=None,
         include_exp_prefix_sub_dir=True,
-):
+        data_dir_name='data'):
     """
     Creates and returns a unique log directory.
     :param exp_prefix: All experiments with this prefix will have log
@@ -105,12 +108,13 @@ def create_log_dir(
     :param exp_id: The number of the specific experiment run within this
     experiment.
     :param base_log_dir: The directory where all log should be saved.
+    :param data_dir_name: The directory name to be created in the project dir
     :return:
     """
     exp_name = create_exp_name(exp_prefix, exp_id=exp_id,
                                seed=seed)
     if base_log_dir is None:
-        base_log_dir = str(project_dir.joinpath('data'))
+        base_log_dir = str(project_dir.joinpath(data_dir_name))
     if include_exp_prefix_sub_dir:
         log_dir = osp.join(base_log_dir, exp_prefix.replace("_", "-"), exp_name)
     else:
@@ -119,6 +123,7 @@ def create_log_dir(
         print("WARNING: Log directory already exists {}".format(log_dir))
     os.makedirs(log_dir, exist_ok=True)
     return log_dir
+
 
 def mkdir_p(path):
     try:
@@ -162,6 +167,7 @@ def dict_to_safe_json(d):
                 new_d[key] = str(item)
     return new_d
 
+
 def safe_json(data):
     if data is None:
         return True
@@ -173,21 +179,33 @@ def safe_json(data):
         return all(isinstance(k, str) and safe_json(v) for k, v in data.items())
     return False
 
-def setup_logger(exp_prefix, variant=None, exp_id=0, seed=None, base_log_dir=None, log_dir=None):
+
+def setup_logger(exp_prefix, variant=None,
+                 exp_id=0, seed=None,
+                 variant_log_file="variant.json",
+                 tabular_log_file="progress.csv",
+                 text_log_file="debug.log",
+                 base_log_dir=None,
+                 snapshot_mode="gap_and_last",
+                 snapshot_gap=100,
+                 log_tabular_only=False):
     logger = Logger()
     logger.reset()
     log_dir = create_log_dir(exp_prefix, exp_id, seed, base_log_dir)
     log_git(log_dir=log_dir)
     logger.set_snapshot_dir(log_dir)
-    tabular_log_path = osp.join(log_dir, 'progress.csv')
-    text_log_path = osp.join(log_dir, 'debug.log')
+    logger.set_snapshot_mode(snapshot_mode)
+    logger.set_snapshot_gap(snapshot_gap)
+    logger.set_log_tabular_only(log_tabular_only)
+    logger.set_snapshot_dir(log_dir)
+    tabular_log_path = osp.join(log_dir, tabular_log_file)
+    text_log_path = osp.join(log_dir, text_log_file)
     logger.add_text_output(text_log_path)
     logger.add_tabular_output(tabular_log_path)
     logger.log(f"log directory: {log_dir}")
     if variant is not None:
         logger.log("Variant:")
         logger.log(json.dumps(dict_to_safe_json(variant), indent=2))
-        variant_log_path = osp.join(log_dir, 'variant.json')
+        variant_log_path = osp.join(log_dir, variant_log_file)
         logger.log_variant(variant_log_path, variant)
     return logger
-
