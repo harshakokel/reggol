@@ -1,11 +1,10 @@
 # Reggol
 
-Reggol (logger in reverse) is a logging util for ML/AI experiments. It is compatible with viskit for visualizing the results.
+Reggol (logger in reverse) is a logging util for ML/AI experiments. It is compatible with [viskit](https://github.com/harshakokel/viskit) for visualizing and monitoring the results while experiments are running.
 
+### Usage guide
 
-### Quick Start
-
-#### Setup 
+#### Setup Logger 
 
 To use Reggol effectively put all the experiment details: hyper parameters, algorithm, and domain name in a dictionary and pass it to `setup_logger` as shown below. Reggol will save this dictionary as json in the experiment folder along with the git commit id and patch file.  
 
@@ -22,7 +21,7 @@ variant = {'exp_prefix': "custom_experminet",
 logger = setup_logger(variant['exp_prefix'], variant, exp_id=os.getpid())
 ```
 
-Reggol can record logs either as print statements in a text file `debug.log` (c.f. `text_log_file` in `setup_logger` to customize this file name) or as a tabular data in `progress.csv` file (c.f. `tabular_log_file` in `setup_logger` to customize)
+Reggol can record logs either as print statements in a text file `debug.log` (c.f. `text_log_file` in `setup_logger` to customize this file name) or as a tabular data in `progress.csv` file (c.f. `tabular_log_file` in `setup_logger` to customize). Reggol output for the above setup is provided in [sample_usage_log dir](./sample_usage_log/).
 
 #### Text log 
 
@@ -83,6 +82,17 @@ environment = gym.make(...)
 # Use the logger
 train_loop = acme.EnvironmentLoop(environment, agent, logger)
 ```
+
+### Installation
+
+To use reggol use following commands
+
+```
+git clone https://github.com/harshakokel/reggol.git
+cd reggol
+pip install -e .
+```
+
 
 ### Credits
 
