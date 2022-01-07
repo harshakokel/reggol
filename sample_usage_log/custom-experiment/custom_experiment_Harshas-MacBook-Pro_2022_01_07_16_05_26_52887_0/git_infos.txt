@@ -1,0 +1,4 @@
+directory: ../reggol
+git hash: e5bb1ca3fb7900d426fad107649f5228b6748572
+git branch name: main
+
