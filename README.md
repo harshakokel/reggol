@@ -1,4 +1,4 @@
-# Reggol
+# Reggol, A logger
 
 Reggol (spelling "logger" backwards; in the spirit of UT Dallas) is a logging util for ML/AI experiments. It is compatible with [viskit](https://github.com/harshakokel/viskit) for visualizing and monitoring the results while experiments are running. That's right, **while experiments are running**.
 
@@ -45,7 +45,31 @@ for i in range(5):
     logger.dump_tabular()
 ```
 
-> :exclamation: For additional reference, see the [python file `sample_usage.py`](./sample_usage.py) and its output in the [folder `sample_usage_log`](./sample_usage_log). 
+### Save Snapshots
+
+Reggol supports saving snapshots every fixed interval of iterations. These snapshots could be some json file or pickle dumps. The intervals can be configured in `setup_logger` using parameters `snapshot_mode` and `snapshot_gap`.    
+
+```python
+# To save json_data
+logger.save_itr_params(iteration, json_data, mode='json' )
+# To save object as pickle
+logger.save_itr_params(iteration, pickle_object, mode='pickle' )
+```
+
+Additionally, there is a `logger.save_extra_data` function to save some extra data that doesn't have to be stored every iteration.
+
+
+### Installation
+
+To use reggol use following commands
+
+```
+git clone https://github.com/harshakokel/reggol.git
+cd reggol
+pip install -r requirements.txt
+pip install -e .
+```
+
 
 ### Integration with third party
 
@@ -84,20 +108,11 @@ environment = gym.make(...)
 train_loop = acme.EnvironmentLoop(environment, agent, logger)
 ```
 
-### Installation
-
-To use reggol use following commands
-
-```
-git clone https://github.com/harshakokel/reggol.git
-cd reggol
-pip install -e .
-```
 
 
+> :exclamation: For additional reference, see the [python file `sample_usage.py`](./sample_usage.py) and its output in the [folder `sample_usage_log`](./sample_usage_log).
+> 
 ### Credits
 
-Code it partially taken from following sources
-
-* https://github.com/vitchyr/rlkit 
+Reggol, a logger util, is extracted from the [rlkit](https://github.com/vitchyr/rlkit) Github repository. 
 

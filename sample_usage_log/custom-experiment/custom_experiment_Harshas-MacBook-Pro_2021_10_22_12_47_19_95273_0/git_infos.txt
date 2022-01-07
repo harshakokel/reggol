@@ -1,4 +1,0 @@
-directory: /Users/hkokel/.../reggol
-git hash: 97f9f0d0dc77a0a940674613f2a20de7926c0fa7
-git branch name: main
-

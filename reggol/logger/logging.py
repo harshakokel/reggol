@@ -210,17 +210,17 @@ class Logger(object):
         file.close()
         return file_name
 
-    def save_extra_data(self, data, file_name='extra_data.pkl', mode='joblib'):
+    def save_extra_data(self, data, file_name='extra_data.pkl', mode='pickle'):
         """
         Data saved here will always override the last entry
         :param data: Something pickle'able.
         """
         file_name = osp.join(self._snapshot_dir, file_name)
-        if mode == 'joblib':
-            import joblib
-            joblib.dump(data, file_name, compress=3)
-        elif mode == 'pickle':
+        if mode == 'pickle':
             pickle.dump(data, open(file_name, "wb"))
+        elif mode == 'json':
+            with open(file_name, "w") as f:
+                json.dump(data, f, indent=2, sort_keys=True, cls=MyEncoder)
         else:
             raise ValueError("Invalid mode: {}".format(mode))
         return file_name
@@ -296,25 +296,62 @@ class Logger(object):
         del self._prefixes[-1]
         self._prefix_str = ''.join(self._prefixes)
 
-    def save_itr_params(self, itr, params):
+
+    def save_itr_params_json(self, itr, params):
         if self._snapshot_dir:
             if self._snapshot_mode == 'all':
                 file_name = osp.join(self._snapshot_dir, 'itr_%d.json' % itr)
-                params.to_json(file_name)
+                with open(file_name, "w") as f:
+                    json.dump(params, f, indent=2, sort_keys=True, cls=MyEncoder)
             elif self._snapshot_mode == 'last':
                 # override previous params
                 file_name = osp.join(self._snapshot_dir, 'params.json')
-                params.to_json(file_name)
+                with open(file_name, "w") as f:
+                    json.dump(params, f, indent=2, sort_keys=True, cls=MyEncoder)
             elif self._snapshot_mode == "gap":
                 if itr % self._snapshot_gap == 0:
                     file_name = osp.join(self._snapshot_dir, 'itr_%d.json' % itr)
-                    params.to_json(file_name)
+                    with open(file_name, "w") as f:
+                        json.dump(params, f, indent=2, sort_keys=True, cls=MyEncoder)
             elif self._snapshot_mode == "gap_and_last":
                 if itr % self._snapshot_gap == 0:
                     file_name = osp.join(self._snapshot_dir, 'itr_%d.json' % itr)
-                    params.to_json(file_name)
+                    with open(file_name, "w") as f:
+                        json.dump(params, f, indent=2, sort_keys=True, cls=MyEncoder)
                 file_name = osp.join(self._snapshot_dir, 'params.json')
-                params.to_json(file_name)
+                with open(file_name, "w") as f:
+                    json.dump(params, f, indent=2, sort_keys=True, cls=MyEncoder)
+            elif self._snapshot_mode == 'none':
+                pass
+            else:
+                raise NotImplementedError
+
+
+    def save_itr_params(self, itr, params, mode="json"):
+        if mode=="json":
+            self.save_itr_params_json(itr,params)
+        elif mode=="pickle":
+            self.save_itr_params_pickle(itr,params)
+
+    def save_itr_params_pickle(self, itr, params):
+        if self._snapshot_dir:
+            if self._snapshot_mode == 'all':
+                file_name = osp.join(self._snapshot_dir, 'itr_%d.pkl' % itr)
+                pickle.dump(params, open(file_name, "wb"))
+            elif self._snapshot_mode == 'last':
+                # override previous params
+                file_name = osp.join(self._snapshot_dir, 'params.pkl')
+                pickle.dump(params, open(file_name, "wb"))
+            elif self._snapshot_mode == "gap":
+                if itr % self._snapshot_gap == 0:
+                    file_name = osp.join(self._snapshot_dir, 'itr_%d.pkl' % itr)
+                    pickle.dump(params, open(file_name, "wb"))
+            elif self._snapshot_mode == "gap_and_last":
+                if itr % self._snapshot_gap == 0:
+                    file_name = osp.join(self._snapshot_dir, 'itr_%d.pkl' % itr)
+                    pickle.dump(params, open(file_name, "wb"))
+                file_name = osp.join(self._snapshot_dir, 'params.pkl')
+                pickle.dump(params, open(file_name, "wb"))
             elif self._snapshot_mode == 'none':
                 pass
             else:
