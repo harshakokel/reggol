@@ -23,8 +23,7 @@ variant = {'exp_prefix': "custom_experminet",
 logger = setup_logger(variant['exp_prefix'], variant, exp_id=os.getpid())
 ```
 
-Reggol can record logs either as print statements in a text file `debug.log` (c.f. `text_log_file` in `setup_logger` to customize this file name) or as a tabular data in `progress.csv` file (c.f. `tabular_log_file` in `setup_logger` to customize). Reggol output for the above setup is provided in [sample_usage_log dir](./sample_usage_log/).
-
+Reggol can record logs either as print statements in a text file `debug.log` (c.f. `text_log_file` in `setup_logger` to customize this file name) or as a tabular data in `progress.csv` file (c.f. `tabular_log_file` in `setup_logger` to customize). 
 #### Text log 
 
 To log a string or sentence use `logger` as below, this will print the log in stdout as well as write it to the `debug.log` file.
@@ -46,7 +45,7 @@ for i in range(5):
     logger.dump_tabular()
 ```
 
-For additional reference, see the [python file `sample_usage.py`](./sample_usage.py) and its output in the [folder `sample_usage_log`](./sample_usage_log). 
+> :exclamation: For additional reference, see the [python file `sample_usage.py`](./sample_usage.py) and its output in the [folder `sample_usage_log`](./sample_usage_log). 
 
 ### Integration with third party
 
