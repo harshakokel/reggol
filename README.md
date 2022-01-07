@@ -1,6 +1,8 @@
 # Reggol
 
-Reggol (logger in reverse) is a logging util for ML/AI experiments. It is compatible with [viskit](https://github.com/harshakokel/viskit) for visualizing and monitoring the results while experiments are running.
+Reggol (spelling "logger" backwards; in the spirit of UT Dallas) is a logging util for ML/AI experiments. It is compatible with [viskit](https://github.com/harshakokel/viskit) for visualizing and monitoring the results while experiments are running. That's right, **while experiments are running**.
+
+**Why Reggol?** In my experience, we need text logs to monitor experiments while development, but need tabular (or csv) files to plot and compare the various experiments. Reggol helps achieve both in a seamless manner, while also keeping track of all the hyperparameters used in each experiment for easy comparison. So go Reggol.
 
 ### Usage guide
 
