@@ -166,6 +166,24 @@ class Logger(object):
                 fd.flush()
             sys.stdout.flush()
 
+    def info(self, s, *args):
+        if args:
+            self.log(s%(args))
+        elif type(s) == list:
+            self.log("".join([str(a) for a in s]))
+        else:
+            self.log(s)
+
+    def debug(self, s, *args):
+        pass
+        # if args:
+        #     self.log(s%(args))
+        # elif type(s) == list:
+        #     self.log("".join([str(a) for a in s]))
+        # self.log(s)
+
+
+
     def record_tabular(self, key, val):
         self._tabular.append((self._tabular_prefix_str + str(key), str(val)))
 
