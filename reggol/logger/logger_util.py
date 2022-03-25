@@ -122,7 +122,7 @@ def create_log_dir(
     if osp.exists(log_dir):
         print("WARNING: Log directory already exists {}".format(log_dir))
     os.makedirs(log_dir, exist_ok=True)
-    return log_dir
+    return exp_name, log_dir
 
 
 def mkdir_p(path):
@@ -191,7 +191,9 @@ def setup_logger(exp_prefix, variant=None,
                  log_tabular_only=False):
     logger = Logger()
     logger.reset()
-    log_dir = create_log_dir(exp_prefix, exp_id, seed, base_log_dir)
+    variant['exp_prefix'] = exp_prefix
+    exp_name, log_dir = create_log_dir(exp_prefix, exp_id, seed, base_log_dir)
+    variant['exp_name'] = exp_name
     log_git(log_dir=log_dir)
     logger.set_snapshot_dir(log_dir)
     logger.set_snapshot_mode(snapshot_mode)
@@ -203,6 +205,7 @@ def setup_logger(exp_prefix, variant=None,
     logger.add_text_output(text_log_path)
     logger.add_tabular_output(tabular_log_path)
     logger.log(f"log directory: {log_dir}")
+
     if variant is not None:
         logger.log("Variant:")
         logger.log(json.dumps(dict_to_safe_json(variant), indent=2))
