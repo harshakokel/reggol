@@ -191,9 +191,8 @@ def setup_logger(exp_prefix, variant=None,
                  log_tabular_only=False):
     logger = Logger()
     logger.reset()
-    variant['exp_prefix'] = exp_prefix
+
     exp_name, log_dir = create_log_dir(exp_prefix, exp_id, seed, base_log_dir)
-    variant['exp_name'] = exp_name
     log_git(log_dir=log_dir)
     logger.set_snapshot_dir(log_dir)
     logger.set_snapshot_mode(snapshot_mode)
@@ -208,6 +207,8 @@ def setup_logger(exp_prefix, variant=None,
 
     if variant is not None:
         logger.log("Variant:")
+        variant['exp_prefix'] = exp_prefix
+        variant['exp_name'] = exp_name
         logger.log(json.dumps(dict_to_safe_json(variant), indent=2))
         variant_log_path = osp.join(log_dir, variant_log_file)
         logger.log_variant(variant_log_path, variant)
